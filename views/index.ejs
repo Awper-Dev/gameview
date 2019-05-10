@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/buttons.css' />
+</head>
+
+<body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <% if (auth) { %>
+    <h2>Hello <%= username %></h2>
+    <% } else {%>
+    <h2><a href="/users/login">Please Sign in </a>
+        <% } %>
+
+        <% if (auth) { %>
+        <a href="/users/logout" class="button1">Sign Out</a>
+        <% } %>
+</body>
+
+</html>

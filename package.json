@@ -1,0 +1,25 @@
+{
+    "name": "gameview",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "start": "nodemon ./bin/www"
+    },
+    "dependencies": {
+        "bcrypt": "^3.0.6",
+        "cookie-parser": "~1.4.4",
+        "debug": "~2.6.9",
+        "dotenv": "^8.0.0",
+        "ejs": "~2.6.1",
+        "express": "~4.16.1",
+        "express-session": "^1.16.1",
+        "http-errors": "~1.6.3",
+        "isemail": "^3.2.0",
+        "lodash": "^4.17.11",
+        "morgan": "~1.9.1",
+        "quick-lru": "^4.0.0",
+        "rethinkdb": "^2.3.3",
+        "rethinkdbdash": "^2.3.31",
+        "session-rethinkdb": "^2.0.1"
+    }
+}
