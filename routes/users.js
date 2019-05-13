@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth.js');
 const bcrypt = require('bcrypt');
 const isMail = require('isemail');
 
-router.get('/', (req, res, next) => {
+// * Does the same as / (file: index.js)
+router.get('/', (req, res) => {
     res.render('index', {
         title: 'Gameview',
         auth: req.session.auth || false,
@@ -12,6 +12,7 @@ router.get('/', (req, res, next) => {
     });
 });
 
+// * Logging a user in and adding some information to his session
 router.post('/login', async (req, res, next) => {
     if (req.session.auth) return res.redirect('/users');
     if (!await req.users.has(req.body.email)) return res.redirect('/users/login');
@@ -22,23 +23,28 @@ router.post('/login', async (req, res, next) => {
     if (bcrypt.compareSync(req.body.password, password)) {
         req.session.username = username;
         req.session.password = password;
+        req.session.email = req.body.email;
         req.session.auth = true;
     }
-    res.redirect('/users');
+    res.status(200).redirect('/users');
 });
 
+// * Logging a user out. This destroys the session.
 router.get('/logout', (req, res, next) => {
     if (!req.session.auth) return res.status(400).send('You can\'t logout without being logged in.');
     req.session.destroy();
     res.redirect('/');
 });
 
-router.get('/exists/:mail/', async (req, res, next) => {
+// * Checks if a mail is already registered. Dunno if this is correct.
+router.get('/exists/:mail/', async (req, res) => {
     if (req.session.auth) return res.sendStatus(403);
     if (!req.params.mail) return res.sendStatus(400);
     res.send(await req.users.has(req.params.mail));
 });
 
+// * Register a new user.
+// ! Emails is only checked by a regex, this is not optimal.
 router.post('/register', async (req, res, next) => {
     if (req.session.auth) return res.redirect('/users');
     const {
@@ -56,13 +62,18 @@ router.post('/register', async (req, res, next) => {
             time: Date.now(),
         }],
     });
-    res.redirect('/users/login');
+    res.status(201).redirect('/users/login');
 });
 
-router.get('/login', (req, res, next) => {
+
+// * The login page.
+router.get('/login', (req, res) => {
     if (req.session.auth) return res.redirect('/users');
     res.render('login');
 });
 
-
-module.exports = router;
+// ! path: /users
+module.exports = {
+    path: '/users',
+    router: router,
+};

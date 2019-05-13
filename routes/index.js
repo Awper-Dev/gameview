@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
+// * Main Route, this is the same as /users xD
+router.get('/', function (req, res) {
     res.render('index', {
         title: 'Gameview',
         auth: req.session.auth || false,
@@ -10,4 +10,7 @@ router.get('/', function (req, res, next) {
     });
 });
 
-module.exports = router;
+module.exports = {
+    path: '/',
+    router: router,
+};

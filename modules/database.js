@@ -1,6 +1,7 @@
 const lru = require('quick-lru');
 const r = require('rethinkdb');
 const _ = require('lodash');
+// ! I only wrote this to manage the database if you only have simple gets and sets.
 class DB_Cache {
     /**
      *Creates an instance of DB_Cache.
@@ -11,12 +12,20 @@ class DB_Cache {
      * @memberof DB_Cache
      */
     constructor(conn, table, keyInDb, maxSize = 100) {
-        this.cache = new lru({
-            'maxSize': maxSize,
-        });
+        if (maxSize > 0) {
+            this.cache = new lru({
+                'maxSize': maxSize,
+            });
+        } else {
+            this.cache = new Map();
+        }
         this.db = conn;
         this.table = table;
         this.keyInDb = keyInDb;
+    }
+
+    toArray() {
+        return [...this.cache];
     }
 
     /**
@@ -81,7 +90,9 @@ class DB_Cache {
     async set(key, value) {
         const obj = value;
         obj[this.keyInDb] = key;
-        this.t.insert(obj).run(this.db);
+        this.t.insert(obj, {
+            conflict: 'update',
+        }).run(this.db);
         this.cache.set(key, value);
         return value;
     }

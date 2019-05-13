@@ -9,6 +9,7 @@ const dotenv = require('dotenv');
 const db = require('./modules/database.js');
 const r = require('rethinkdb');
 const config = require('./connectionInfos.json');
+const fs = require('fs');
 dotenv.config();
 const conn = require('rethinkdbdash')({
     servers: [
@@ -16,13 +17,16 @@ const conn = require('rethinkdbdash')({
     ],
 });
 const store = new RDBStore(conn);
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-
+const routes = fs.readdirSync('./routes').map(x => require('./routes/' + x));
 const app = express();
-const users = new db(app.db, 'users', 'email', 200);
-app.db = r.connect(config.rethindb).then(res => users.db = res);
-
+let users;
+let servers;
+(async () => {
+    app.db = await r.connect(config.rethinkdb);
+    users = new db(app.db, 'users', 'email', 200);
+    servers = new db(app.db, 'servers', 'address', 0);
+    require('./modules/check.js')(servers);
+})();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -51,12 +55,12 @@ app.use(session({
 app.use((req, res, next) => {
     req.db = app.db;
     req.users = users;
+    req.servers = servers;
     next();
 });
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+console.log(`Loaded ${routes.length} Routes`);
+routes.forEach(x => app.use(x.path, x.router));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
