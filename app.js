@@ -13,7 +13,7 @@ const fs = require('fs');
 dotenv.config();
 const conn = require('rethinkdbdash')({
     servers: [
-        config.rethindb,
+        config.rethinkdb,
     ],
 });
 const store = new RDBStore(conn);
