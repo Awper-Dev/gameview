@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const isMail = require('isemail');
-
+// ! account create has to be changed on serverside, or ugly errors.
 // * Does the same as / (file: index.js)
 router.get('/', (req, res) => {
     res.render('index', {
@@ -13,9 +13,10 @@ router.get('/', (req, res) => {
 });
 
 // * Logging a user in and adding some information to his session
-router.post('/login', async (req, res, next) => {
+router.post('/login', async (req, res) => {
     if (req.session.auth) return res.redirect('/users');
-    if (!await req.users.has(req.body.email)) return res.redirect('/users/login');
+    if (!req.body.email || !req.body.password) return res.status(400).send('Password or E-mail not provided');
+    if (!await req.users.has(req.body.email)) return res.status(400).send('Unknown E-mail and Password combination');
     const {
         password,
         username,
@@ -25,14 +26,16 @@ router.post('/login', async (req, res, next) => {
         req.session.password = password;
         req.session.email = req.body.email;
         req.session.auth = true;
+        res.status(200).send('Success. You will be redirected.');
+        return;
     }
-    res.status(200).redirect('/users');
+    res.status(400).send('Unknown E-mail and Password combination');
 });
 
 // * Logging a user out. This destroys the session.
-router.get('/logout', (req, res, next) => {
+router.get('/logout', async (req, res) => {
     if (!req.session.auth) return res.status(400).send('You can\'t logout without being logged in.');
-    req.session.destroy();
+    await req.session.destroy();
     res.redirect('/');
 });
 
@@ -45,7 +48,7 @@ router.get('/exists/:mail/', async (req, res) => {
 
 // * Register a new user.
 // ! Emails is only checked by a regex, this is not optimal.
-router.post('/register', async (req, res, next) => {
+router.post('/register', async (req, res) => {
     if (req.session.auth) return res.redirect('/users');
     const {
         email,
