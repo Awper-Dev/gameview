@@ -16,6 +16,10 @@ html {
     background-color: #181a1b;
 }
 
+
+
+
+
 html,
 body,
 input,
@@ -87,4 +91,37 @@ select:-webkit-autofill {
 
 * {
     scrollbar-color: #2a2c2e #1c1e1f;
+}
+
+table {
+    color: rgb(158, 152, 152);
+    font-family: Helvetica, Arial, sans-serif;
+    width: auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+
+td,
+th {
+    border: 1px solid transparent;
+    height: 30px;
+    transition: all 0.3s;
+}
+
+th {
+    background: rgb(7, 82, 54);
+    font-weight: bold;
+}
+
+td {
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    background: rgba(10, 62, 63, 0.432);
+}
+
+tr:nth-child(odd) {
+    background: #024e4e83;
 }

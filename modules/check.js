@@ -2,7 +2,6 @@ const dig = require('gamedig');
 const r = require('rethinkdb');
 const time = 5;
 let finished = true;
-// ! This is just for testing pinging, there is no way to view your current server statistics
 const onFail = () => ({
     success: false,
     ping: 0,
@@ -49,9 +48,14 @@ async function query(db, ser) {
         });
     }
     // Inserting everything in rethinkdb, there are probably better ways.
-    map.forEach((v, k) => ser.t.get(k).update({
-        history: r.row('history').append(v),
-    }).run(db));
+    map.forEach((v, k) => {
+        ser.t.get(k).update({
+            history: r.row('history').append(v),
+        }).run(db);
+        const dat = ser.cache.get(k);
+        dat.history.push(v);
+        ser.cache.set(k, dat);
+    });
 
     finished = true;
 }

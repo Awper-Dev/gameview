@@ -3,15 +3,17 @@
 
 <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/index.css' />
     <link rel='stylesheet' href='/stylesheets/buttons.css' />
+    <link rel='stylesheet' href='/stylesheets/status.css' />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel='stylesheet'
         href='https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.css' />
-    <script src="/javascripts/index.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.all.min.js"></script>
 </head>
 
 <body>
+    <script src="/javascripts/index.js"></script>
 
     <h1><%= title %></h1>
     <% if (auth) { %>
@@ -20,7 +22,22 @@
     <input type="text" placeholder="ip-address" id="ip" />
     <input type="text" placeholder="port" id="port" />
     <a class="button1" onclick="submitAddress()">Add Server</a>
-    <a href="/users/logout" class="button1">Sign Out</a>
+    <a href="/users/logout" class="button1">Sign Out</a><br>
+    <a onclick="updateServers(false)" class="button1">Refresh ↻</a>
+    <div id="server-container">
+        <table id="server-table">
+            <thead>
+                <th>Status</th>
+                <th>Address</th>
+                <th>Ping</th>
+                <th>Extra Information</th>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <script>
+        updateServers()
+    </script>
     <% } else {%>
     <h2><a href="/users/login">Please Sign in </a>
         <% } %>

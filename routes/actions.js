@@ -24,6 +24,22 @@ router.post('/addserver', auth, async (req, res) => {
     res.status(201).send(`Server "${out}" added to user "${req.session.username}"`);
 });
 
+router.get('/getservers', auth, async (req, res) => {
+    const servers = [];
+    req.servers.cache.forEach((v, k) => {
+        if (!v.owners.includes(req.session.email)) return;
+        v.history.sort((a, b) => a.time - b.time);
+        servers.push({
+            ip: k,
+            online: (v.history.length > 0) ? v.history[0].success : false,
+            ping: (v.history.length > 0) ? v.history[0].ping : 0,
+            extra: (v.history.length < 1) ? 'Server was not pinged yet.' : '',
+            players: (v.history.length > 0) ? v.history[0].players : 0,
+        });
+    });
+    res.status(200).send(servers);
+});
+
 // ! path: /actions
 module.exports = {
     path: '/actions',
