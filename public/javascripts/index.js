@@ -27,11 +27,11 @@ function updateServers(setTimer = true) {
     if (!div) return;
     const started = Date.now();
     Swal.fire({
-        title: 'Pulling Data from Server',
+        toast: true,
+        title: 'Pulling Data',
         background: '#2a2c2e',
         position: 'top-end',
         showConfirmButton: false,
-        footer: '<a>Pulling information about your Servers to our Servers</a>',
         onBeforeOpen: Swal.showLoading,
         type: 'info',
     });
