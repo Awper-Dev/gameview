@@ -46,7 +46,6 @@ function updateServers(setTimer = true) {
             table.appendChild(renderRow(element));
             div.appendChild(table);
         });
-
         setTimeout(Swal.close, (started - 1000 < Date.now()) ? 1000 : 0);
     });
     if (setTimer) setTimeout(updateServers, 300000);
