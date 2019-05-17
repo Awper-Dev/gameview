@@ -23,6 +23,7 @@ function submitLogin(e) {
         }),
     }).then(async (r) => {
         Swal.fire({
+            toast: true,
             position: 'top-end',
             type: ((r.ok) ? 'success' : 'error'),
             text: await r.text(),
