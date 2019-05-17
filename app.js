@@ -10,8 +10,8 @@ const db = require('./modules/database.js');
 const r = require('rethinkdb');
 const config = require('./connectionInfos.json');
 const fs = require('fs');
-
 dotenv.config();
+
 const conn = require('rethinkdbdash')({
     servers: [
         config.rethinkdb,
