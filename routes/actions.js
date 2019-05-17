@@ -9,7 +9,7 @@ router.post('/addserver', auth, async (req, res) => {
         ip,
         port,
     } = req.body;
-    let out = ip;
+    let out = ip.trim();
     if (!(typeof ip === 'string' && ip.length > 2)) return res.status(400).send('`IP` has to be a valid ip address or domain.');
     if (port) out += ':' + port;
     const data = await req.servers.get(out) || {};
