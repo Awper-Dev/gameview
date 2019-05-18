@@ -28,7 +28,7 @@ router.get('/getservers', auth, async (req, res) => {
     const servers = [];
     req.servers.cache.forEach((v, k) => {
         if (!v.owners.includes(req.session.email)) return;
-        v.history.sort((a, b) => a.time - b.time);
+        v.history.sort((a, b) => b.time - a.time);
         servers.push({
             ip: k,
             online: (v.history.length > 0) ? v.history[0].success : false,
