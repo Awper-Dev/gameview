@@ -32,10 +32,15 @@ let servers;
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
+const sessionsettings = {
+    secret: process.env.SECRET,
+    resave: true,
+    saveUninitialized: true,
+    store: store,
+};
 if (app.get('env') !== 'development') {
     app.set('trust proxy', 1);
-    session.secure = true;
+    sessionsettings.secure = true;
     console.log('Trusting Proxy');
 }
 
@@ -46,13 +51,7 @@ app.use(express.urlencoded({
 }));
 app.use(cookieParser());
 
-app.use(session({
-    secret: process.env.SECRET,
-    resave: true,
-    saveUninitialized: true,
-    store: store,
-}));
-
+app.use(session(sessionsettings));
 app.use((req, res, next) => {
     req.db = app.db;
     req.users = users;
@@ -69,13 +68,21 @@ app.use(function (req, res, next) {
 });
 
 // error handler
-app.use(function (err, req, res) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+app.use(function (err, req, res, next) {
+    let error = {};
+    if (req.app.get('env') === 'development') {
+        error = err;
+        error.status = error.status || 500;
+    } else {
+        error = {
+            status: err.status || 500,
+            message: (err.status === 404) ? 'Site not found' : 'Internal Server Error',
+        };
+    }
     // render the error page
     res.status(err.status || 500);
-    res.render('error');
+    res.render('error', {
+        err: error,
+    });
 });
 module.exports = app;
