@@ -1,7 +1,6 @@
 const dig = require('gamedig');
 const r = require('rethinkdb');
-const time = 5 * 60 * 1000;
-let finished = true;
+const time = 60 * 1000;
 const onFail = () => ({
     success: false,
     ping: 0,
@@ -20,13 +19,11 @@ module.exports = async (ser) => {
         ser.cache.set(key, x);
     });
     console.timeEnd('db');
-    query(db, ser);
+    await query(db, ser);
 };
 
 async function query(db, ser) {
-    if (!finished) return;
     console.time('dig1');
-    finished = false;
     const keys = [...ser.cache.keys()];
     const arr = keys.map(x => dig.query({
         'type': 'minecraft',
