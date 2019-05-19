@@ -1,6 +1,6 @@
 const dig = require('gamedig');
 const r = require('rethinkdb');
-const time = 5;
+const time = 5 * 60 * 1000;
 let finished = true;
 const onFail = () => ({
     success: false,
@@ -21,7 +21,6 @@ module.exports = async (ser) => {
     });
     console.timeEnd('db');
     query(db, ser);
-    setInterval(() => query(db, ser), time * 60 * 1000);
 };
 
 async function query(db, ser) {
@@ -56,6 +55,5 @@ async function query(db, ser) {
         dat.history.push(v);
         ser.cache.set(k, dat);
     });
-
-    finished = true;
+    setTimeout(() => query(db, ser), time);
 }
