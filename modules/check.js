@@ -1,6 +1,6 @@
 const dig = require('gamedig');
 const r = require('rethinkdb');
-const time = 60 * 1000;
+const time = 5 * 60 * 1000;
 const onFail = () => ({
     success: false,
     ping: 0,
