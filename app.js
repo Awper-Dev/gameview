@@ -41,10 +41,17 @@ const sessionsettings = {
 if (app.get('env') !== 'development') {
     app.set('trust proxy', 1);
     sessionsettings.secure = true;
+    app.use(logger('short', {
+        skip: function (req, res) {
+            return res.statusCode < 400;
+        },
+    }));
     console.log('Trusting Proxy');
+} else {
+    app.use(logger('dev'));
 }
 
-app.use(logger('dev'));
+
 app.use(express.json());
 app.use(express.urlencoded({
     extended: false,
