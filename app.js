@@ -38,6 +38,13 @@ const sessionsettings = {
     saveUninitialized: true,
     store: store,
 };
+const protectCfg = {
+    errorPropagationMode: true,
+    production: app.get('env') !== 'development',
+    clientRetrySecs: 5,
+};
+const protect = require('overload-protection')('express', protectCfg);
+
 if (app.get('env') !== 'development') {
     app.set('trust proxy', 1);
     sessionsettings.secure = true;
@@ -51,13 +58,12 @@ if (app.get('env') !== 'development') {
     app.use(logger('dev'));
 }
 
-
+app.use(protect);
 app.use(express.json());
 app.use(express.urlencoded({
     extended: false,
 }));
 app.use(cookieParser());
-
 app.use(session(sessionsettings));
 app.use((req, res, next) => {
     req.db = app.db;
@@ -77,17 +83,18 @@ app.use(function (req, res, next) {
 // error handler
 app.use(function (err, req, res, next) {
     let error = {};
+    console.error(err);
     if (req.app.get('env') === 'development') {
         error = err;
-        error.status = error.status || 500;
+        error.status = err.status || err.statusCode || 500;
     } else {
         error = {
-            status: err.status || 500,
-            message: (err.status === 404) ? 'Site not found' : 'Internal Server Error',
+            status: err.status || err.statusCode || 500,
+            message: (err.status === 404) ? 'Site not found' : ((err.statusCode || err.status) === 503) ? 'Server is overloaded' : 'Internal Server Error',
         };
     }
     // render the error page
-    res.status(err.status || 500);
+    res.status(error.status || error.statusCode || 500);
     res.render('error', {
         err: error,
     });
