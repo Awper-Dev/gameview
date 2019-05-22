@@ -17,6 +17,7 @@
         "http-errors": "~1.6.3",
         "isemail": "^3.2.0",
         "morgan": "~1.9.1",
+        "overload-protection": "^1.1.0",
         "quick-lru": "^4.0.0",
         "rethinkdb": "^2.3.3",
         "rethinkdbdash": "^2.3.31",
