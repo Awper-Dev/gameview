@@ -1,7 +1,7 @@
 Website to collect data of (currently only minecraft) Servers and notify downtime.
 
 To start the project run `npm start`
-
+If you want to contribute feel free to create a pr.
 ### Development Infos:
 `connectionInfo.json` has to look like this:
 ```xl
