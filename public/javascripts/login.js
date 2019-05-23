@@ -11,12 +11,6 @@ document.querySelector('.login-form').addEventListener('submit', e => {
     submitLogin(e);
 });
 
-
-document.querySelector('.login-form').addEventListener('submit', e => {
-    e.preventDefault();
-    submitLogin(e);
-});
-
 document.querySelector('.register-form').addEventListener('submit', e => {
     e.preventDefault();
     submitCreate(e);
