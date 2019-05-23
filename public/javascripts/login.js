@@ -1,8 +1,9 @@
+/* global Swal $*/
 $('.message a').click(function () {
     $('form').animate({
-        height: "toggle",
-        opacity: "toggle"
-    }, "slow");
+        height: 'toggle',
+        opacity: 'toggle',
+    }, 'slow');
 });
 
 document.querySelector('.login-form').addEventListener('submit', e => {

@@ -1,3 +1,5 @@
+/* global Swal */
+// eslint-disable-next-line no-unused-vars
 function submitAddress() {
     fetch('/actions/addserver', {
         method: 'POST',
