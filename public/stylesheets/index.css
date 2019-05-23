@@ -11,6 +11,13 @@ input[type=text] {
     box-sizing: border-box;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgb(7, 82, 54) inset !important;
+    -webkit-text-fill-color: rgb(209, 209, 209) !important;
+}
 
 html {
     background-color: #181a1b;
