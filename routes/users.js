@@ -55,8 +55,10 @@ router.post('/register', async (req, res) => {
         username,
         password,
     } = req.body;
-
-    if (!((username && username.length > 2) && (password && password.length > 6) && isMail.validate(email))) return res.sendStatus(400);
+    if (!username || username.length < 2) return res.status(400).send('Username not provided or too short');
+    if (!password || password.length < 6) return res.status(400).send('Password not provided or too short');
+    if (!isMail.validate(email)) return res.status(400).send('Not a valid email');
+    if (req.users.has(email)) return res.status(400).send('This email is already registered');
     await req.users.set(email, {
         'username': username,
         'password': bcrypt.hashSync(password, parseInt(process.env.SALT)),
@@ -65,7 +67,7 @@ router.post('/register', async (req, res) => {
             time: Date.now(),
         }],
     });
-    res.status(201).redirect('/users/login');
+    res.status(200).send('Success. You will be redirected.');
 });
 
 
