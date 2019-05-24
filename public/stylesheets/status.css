@@ -5,3 +5,12 @@
 .online {
     color: greenyellow;
 }
+
+.online-card {
+    background-color: green;
+}
+
+.offline-card {
+    background-color: red;
+    font-style: inherit;
+}
