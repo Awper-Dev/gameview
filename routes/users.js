@@ -26,6 +26,12 @@ router.post('/login', async (req, res) => {
         req.session.password = password;
         req.session.email = req.body.email;
         req.session.auth = true;
+        const data = await req.users.get(req.body.email);
+        data.lastIPs.push({
+            ip: req.ip,
+            time: Date.now(),
+        });
+        await req.users.set(req.body.email, data);
         res.status(200).send('Success. You will be redirected.');
         return;
     }
