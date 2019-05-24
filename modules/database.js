@@ -97,6 +97,12 @@ class DB_Cache {
         return value;
     }
 
+    async delete(key) {
+        this.cache.delete(key);
+        await this.t.get(key).delete().run(this.db);
+        return;
+    }
+
     /**
      *Checks if the key is available in the cache or db, this will not cache the value
      * @param {*} key
