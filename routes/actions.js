@@ -24,6 +24,20 @@ router.post('/addserver', auth, async (req, res) => {
     res.status(201).send(`Server "${out}" added to user "${req.session.username}"`);
 });
 
+router.post('/removeserver', auth, async (req, res) => {
+    const {
+        ip,
+    } = req.body;
+    const out = ip.trim();
+    const data = await req.servers.get(out);
+    if (!data) return res.status(400).send('This Server was never added to our System');
+    if (!data.owners.includes(req.session.email)) return res.status(400).send('You never subscribed to this Server');
+    data.owners.splice(data.owners.indexOf(req.session.email));
+    if (data.owners.length < 1) await req.servers.delete(out);
+    else await req.servers.set(out, data);
+    res.status(201).send(`Server "${out}" removed from user "${req.session.username}"`);
+});
+
 router.get('/getservers', auth, async (req, res) => {
     const servers = [];
     req.servers.cache.forEach((v, k) => {
