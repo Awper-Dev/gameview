@@ -1,37 +1,51 @@
 /* global Swal */
 // eslint-disable-next-line no-unused-vars
 function submitAddress() {
-    fetch('/actions/addserver', {
-        method: 'POST',
-
-        headers: {
-            'Content-Type': 'application/json',
+    Swal.fire({
+        title: 'Your Servers Connection:',
+        input: 'text',
+        inputAttributes: {
+            autocapitalize: 'off',
         },
-        body: JSON.stringify({
-            ip: document.querySelector('#ip').value,
-            port: document.querySelector('#port').value,
-        }),
-    }).then(async (r) =>
-        Swal.fire({
-            position: 'top-end',
-            type: ((r.ok) ? 'success' : 'error'),
-            text: await r.text(),
-            showConfirmButton: false,
-            timer: 3000,
-            background: '#2a2c2e',
-        }));
-    setTimeout(() => updateServers(false), 4000);
+        showCancelButton: true,
+        confirmButtonText: 'Add Server',
+        showLoaderOnConfirm: true,
+        preConfirm: (server) => {
+            return fetch('/actions/addserver', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        ip: server,
+                    }),
+                })
+                .then(async response => {
+                    if (!response.ok) throw new Error(await response.text());
+                    return response.text();
+                })
+                .catch(error => Swal.showValidationMessage(error));
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    }).then((result) => {
+        if (result.value) {
+            Swal.fire({
+                title: 'Added Server',
+                text: result.value,
+                type: 'info',
+            });
+            setTimeout(() => updateServers(false), 2000);
+        }
+    });
 }
 
 function updateServers(setTimer = true) {
     const table = document.querySelector('#server-table');
     const div = document.querySelector('#server-container');
     if (!div) return;
-    const started = Date.now();
     Swal.fire({
         toast: true,
         title: 'Pulling Data',
-        background: '#2a2c2e',
         position: 'top-end',
         showConfirmButton: false,
         onBeforeOpen: Swal.showLoading,
@@ -48,9 +62,9 @@ function updateServers(setTimer = true) {
             table.appendChild(renderRow(element));
             div.appendChild(table);
         });
-        setTimeout(Swal.close, (started - 1000 < Date.now()) ? 1000 : 0);
+        setTimeout(Swal.close, 500);
+        if (setTimer) setTimeout(updateServers, 300000);
     });
-    if (setTimer) setTimeout(updateServers, 300000);
 }
 
 function renderRow(obj) {
