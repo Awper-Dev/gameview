@@ -5,14 +5,17 @@ const {
 } = require('child_process');
 // * Main Route, this is the same as /users xD
 router.get('/', function (req, res) {
+    let data = '';
+    if (req.updateAvailable && req.session.admin) req.updateData.commits.forEach(v => data += `[[${v.author.username}]]: ${v.message}`);
+
     res.render('index', {
         title: 'Gameview',
         auth: req.session.auth || false,
         username: req.session.username,
         admin: req.session.admin,
         updateAvailable: (req.session.admin) ? req.updateAvailable : false,
+        updateData: (req.session.admin) ? data : data,
     });
-    console.log(req.updateData);
 });
 
 // ! Updates the whole code if possible, can only be run by owner

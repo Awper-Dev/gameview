@@ -93,6 +93,9 @@
     <% if (updateAvailable) { %>
     <script src='/javascripts/admin.min.js' />
     </script>
+    <script>
+        var updateData = `<%- updateData %>`;
+    </script>
     <% } %>
     </script>
     <% if (auth) { %>

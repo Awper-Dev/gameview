@@ -2,6 +2,7 @@
 setTimeout(() =>
     Swal.fire({
         title: 'Update available, restart?',
+        text: updateData,
         showCancelButton: true,
         confirmButtonText: 'update and restart',
         showLoaderOnConfirm: true,

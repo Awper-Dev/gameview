@@ -3,14 +3,18 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const isMail = require('isemail');
 // ! account create has to be changed on serverside, or ugly errors.
-// * Does the same as / (file: index.js)
+// * Does the same as / (file: index.ejs)
 router.get('/', (req, res) => {
+    let data = '';
+    if (req.updateAvailable && req.session.admin) req.updateData.commits.forEach(v => data += `[[${v.author.username}]]: ${v.message}`);
+
     res.render('index', {
         title: 'Gameview',
         auth: req.session.auth || false,
         username: req.session.username,
         admin: req.session.admin,
         updateAvailable: (req.session.admin) ? req.updateAvailable : false,
+        updateData: (req.session.admin) ? data : data,
     });
 });
 
