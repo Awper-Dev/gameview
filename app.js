@@ -73,9 +73,9 @@ app.use(express.urlencoded({
 }));
 app.use(cookieParser());
 app.use(session(sessionsettings));
-webhookHandler.on('push', function (repo, data) {
+webhookHandler.on('push', function (repo, _data) {
     updateAvailable = true;
-    data = data;
+    data = _data;
 });
 app.use((req, res, next) => {
     req.db = app.db;
