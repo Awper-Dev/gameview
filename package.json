@@ -12,6 +12,7 @@
         "dotenv": "^8.0.0",
         "ejs": "~2.6.1",
         "express": "~4.16.1",
+        "express-github-webhook": "^1.0.6",
         "express-session": "^1.16.1",
         "gamedig": "^2.0.14",
         "http-errors": "~1.6.3",
