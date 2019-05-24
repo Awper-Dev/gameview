@@ -63,7 +63,7 @@ function updateServers(setTimer = true) {
             div.appendChild(table);
         });
         setTimeout(Swal.close, 500);
-        if (setTimer) setTimeout(updateServers, 300000);
+        if (setTimer) setTimeout(() => updateServers(true), 300000);
     });
 }
 
