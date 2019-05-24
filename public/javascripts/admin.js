@@ -2,9 +2,9 @@
 setTimeout(() =>
     Swal.fire({
         title: 'Update available, restart?',
-        text: updateData,
+        html: updateData,
         showCancelButton: true,
-        confirmButtonText: 'update and restart',
+        confirmButtonText: 'Update and Restart',
         showLoaderOnConfirm: true,
         preConfirm: () => {
             return fetch('/update')
@@ -22,6 +22,6 @@ setTimeout(() =>
                 title: 'Updating Server',
                 type: 'success',
             });
-            setTimeout(() => location.reload(), 2000);
+            setTimeout(() => location.reload(true), 2000);
         }
     }), 5000);
