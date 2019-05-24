@@ -6,7 +6,7 @@ const isMail = require('isemail');
 // * Does the same as / (file: index.ejs)
 router.get('/', (req, res) => {
     let data = '';
-    if (req.updateAvailable && req.session.admin) req.updateData.commits.forEach(v => data += `[[${v.author.username}]]: ${v.message}`);
+    if (req.updateAvailable && req.session.admin) req.updateData.commits.forEach(v => data += `[ ${v.author.username} ]: ${v.message}`);
 
     res.render('index', {
         title: 'Gameview',
