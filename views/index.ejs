@@ -91,7 +91,13 @@
             <div class="footer__signature">Made with love by pure genius</div>
         </footer>
     </div>
+    <% if (updateAvailable) { %>
+    <script src='/javascripts/admin.min.js' />
+    </script>
+    <% } %>
+    </script>
     <% if (auth) { %>
+
     <script>
         updateServers(true);
     </script>

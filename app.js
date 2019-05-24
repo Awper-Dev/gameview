@@ -10,8 +10,13 @@ const db = require('./modules/database.js');
 const r = require('rethinkdb');
 const config = require('./connectionInfos.json');
 const fs = require('fs');
+const GithubWebHook = require('express-github-webhook');
 dotenv.config();
 
+const webhookHandler = GithubWebHook({
+    path: '/webhook/github',
+    secret: process.env.SECRET,
+});
 const conn = require('rethinkdbdash')({
     servers: [
         config.rethinkdb,
@@ -22,6 +27,8 @@ const routes = fs.readdirSync('./routes').map(x => require('./routes/' + x));
 const app = express();
 let users;
 let servers;
+let updateAvailable = false;
+let data = {};
 (async () => {
     app.db = await r.connect(config.rethinkdb);
     users = new db(app.db, 'users', 'email', 200);
@@ -60,15 +67,25 @@ if (app.get('env') !== 'development') {
 
 app.use(protect);
 app.use(express.json());
+app.use(webhookHandler);
 app.use(express.urlencoded({
     extended: false,
 }));
 app.use(cookieParser());
 app.use(session(sessionsettings));
+webhookHandler.on('push', function (repo, data) {
+    updateAvailable = true;
+    data = data;
+});
 app.use((req, res, next) => {
     req.db = app.db;
     req.users = users;
     req.servers = servers;
+    req.updateAvailable = updateAvailable;
+    if (updateAvailable) {
+        req.updateData = data;
+        req.resetUpdateVar = () => updateAvailable = false;
+    }
     next();
 });
 app.use(express.static(path.join(__dirname, 'public')));

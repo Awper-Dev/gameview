@@ -9,6 +9,8 @@ router.get('/', (req, res) => {
         title: 'Gameview',
         auth: req.session.auth || false,
         username: req.session.username,
+        admin: req.session.admin,
+        updateAvailable: (req.session.admin) ? req.updateAvailable : false,
     });
 });
 
@@ -20,12 +22,14 @@ router.post('/login', async (req, res) => {
     const {
         password,
         username,
+        admin,
     } = await req.users.get(req.body.email);
     if (bcrypt.compareSync(req.body.password, password)) {
         req.session.username = username;
         req.session.password = password;
         req.session.email = req.body.email;
         req.session.auth = true;
+        req.session.admin = !!admin;
         const data = await req.users.get(req.body.email);
         data.lastIPs.push({
             ip: req.ip,
