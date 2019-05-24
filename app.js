@@ -73,7 +73,7 @@ app.use(express.urlencoded({
 }));
 app.use(cookieParser());
 app.use(session(sessionsettings));
-webhookHandler.on('push', function (repo, _data) {
+webhookHandler.on('push', function (_repo, _data) {
     updateAvailable = true;
     data = _data;
 });
