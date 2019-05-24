@@ -1,4 +1,4 @@
-/* global Swal*/
+/* global Swal updateData*/
 setTimeout(() =>
     Swal.fire({
         title: 'Update available, restart?',
@@ -22,6 +22,6 @@ setTimeout(() =>
                 title: 'Updating Server',
                 type: 'success',
             });
-            setTimeout(() => location.reload(), 5000);
+            setTimeout(() => location.reload(), 2000);
         }
     }), 5000);
